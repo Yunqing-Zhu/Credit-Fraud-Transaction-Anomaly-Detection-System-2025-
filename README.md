@@ -1,108 +1,109 @@
-# 信用卡欺诈检测模型
+# Credit Card Fraud Detection Model
 
-基于随机森林算法的信用卡欺诈检测模型，使用机器学习技术识别潜在的欺诈交易。
+A credit card fraud detection model based on the Random Forest algorithm.
+This project applies machine learning techniques to identify potentially fraudulent transactions from transaction data.
 
-## 项目结构
+## Project Structure
 
 ```
 card/
-├── train_model.py          # 模型训练程序
-├── test_model.py           # 模型测试程序
-├── run_all.py              # 综合运行脚本
-├── download_dataset.py        # 数据下载脚本
-├── requirements.txt        # 依赖包列表
-└── README.md               # 项目说明文件
+├── train_model.py          # Script for training the model
+├── test_model.py           # Script for evaluating the trained model
+├── run_all.py              # End-to-end execution script
+├── download_dataset.py        # Script for downloading the dataset
+├── requirements.txt        # List of required dependencies
+└── README.md               # Project documentation
 ```
 
-## 主要功能
+## Key Features
 
-- **随机森林模型训练**：使用随机森林算法训练信用卡欺诈检测模型
-- **数据预处理**：包括特征标准化、处理类别不平衡问题（SMOTE）
-- **超参数优化**：使用网格搜索进行超参数调优
-- **模型评估**：计算精确率（Precision）、召回率（Recall）、F1分数和AUC-ROC等指标
-- **可视化分析**：生成混淆矩阵、ROC曲线和预测概率分布图
-- **模型保存和加载**：支持训练好的模型和预处理器的保存与加载
+- **Random Forest Model Training**：Trains a credit card fraud detection model using the Random Forest algorithm.
+- **Data Preprocessing**：Includes feature standardization and handling class imbalance using SMOTE.
+- **Hyperparameter Optimization**：Performs hyperparameter tuning with Grid Search.
+- **Model Evaluation**：Computes evaluation metrics such as Precision, Recall, F1-score, and AUC-ROC.
+- **Visualization and Analysis**：Generates a confusion matrix, ROC curve, and predicted probability distribution plots.
+- **Model Persistence**：Supports saving and loading trained models and preprocessing objects.
 
-## 环境准备
+## Environment Setup
 
-### 1. 安装Python依赖
+### 1. Install Python Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. 下载数据集
+### 2. Download the Dataset
 
 ```python
 import kagglehub
 
-# 下载最新版本
+# Download the latest version of the dataset
 path = kagglehub.dataset_download("mlg-ulb/creditcardfraud")
 
-print("数据集文件路径:", path)
+print("Dataset file path:", path)
 ```
 
-请确保在当前目录下有 `creditcard.csv` 数据文件。
+Please ensure that the `creditcard.csv` data file is available in the current directory.
 
-## 使用方法
+## Usage
 
-### 1. 训练模型
+### 1. Train the Model
 
 ```bash
 python train_model.py
 ```
 
-这将执行以下步骤：
-- 加载数据集
-- 数据预处理（标准化、处理类别不平衡）
-- 超参数优化
-- 模型训练
-- 模型评估
-- 保存训练好的模型和标准化器
-
-### 2. 测试模型
+This process includes the following steps:
+- Loading the dataset
+- Data preprocessing (standardization and class imbalance handling)
+- Hyperparameter optimization
+- Model training
+- Model evaluation
+- Saving the trained model and the scaler
+  
+### 2. Test the Model
 
 ```bash
 python test_model.py
 ```
 
-这将加载训练好的模型并执行以下步骤：
-- 加载测试数据
-- 模型评估
-- 生成评估指标和可视化图表
-- 提供新交易预测示例
-
-### 3. 使用综合运行脚本
+This will load the trained model and perform the following:
+- Loading the test dataset
+- Model evaluation
+- Generating evaluation metrics and visualizations
+- Providing example predictions for new transactions
+  
+### 3. Run the End-to-End Script
 
 ```bash
 python run_all.py
 ```
 
-这将提供一个交互式界面，可以：
-- 显示使用说明
-- 检查环境依赖
-- 检查数据文件
-- 运行完整流程（训练+测试）
-- 单独运行训练或测试
+This script provides an interactive interface that can:
+- Display usage instructions
+- Check environment dependencies
+- Verify the presence of required data files
+- Run the full pipeline (training + testing)
+- Run training or testing independently
 
-## 评估指标
+## Evaluation Metrics
 
-- **精确率 (Precision)**：预测为欺诈的交易中实际为欺诈的比例
-- **召回率 (Recall)**：实际欺诈交易中被正确识别的比例
-- **F1分数 (F1-score)**：精确率和召回率的调和平均数
-- **AUC-ROC**：ROC曲线下面积，衡量模型区分能力的指标
+- **Precision**：The proportion of transactions predicted as fraudulent that are actually fraudulent.
+- **Recall**：The proportion of actual fraudulent transactions that are correctly identified.
+- **F1-score**：The harmonic mean of Precision and Recall.
+- **AUC-ROC**：The area under the ROC curve, measuring the model’s ability to distinguish between fraudulent and non-fraudulent transactions.
+  
+## Optimization Strategies
 
-## 优化策略
+1. **Handling Class Imbalance**：Applies SMOTE (Synthetic Minority Oversampling Technique) for oversampling the minority class.
+2. **Hyperparameter Optimization**：Uses Grid Search to optimize key Random Forest parameters.
+3. **Cross-Validation**：Evaluates model performance using 5-fold cross-validation.
+4. **Feature Standardization**：Applies standardization to numerical features.
+5. **Class Weight Balancing**：Sets balanced class weights within the model to further address class imbalance.
 
-1. **处理类别不平衡**：使用SMOTE（Synthetic Minority Oversampling Technique）过采样技术
-2. **超参数优化**：使用网格搜索优化随机森林的关键参数
-3. **交叉验证**：使用5折交叉验证评估模型性能
-4. **特征标准化**：对特征进行标准化处理
-5. **类别权重平衡**：在模型中设置balanced class weight
+## Dataset Description
 
-## 数据集说明
+The credit card fraud detection dataset contains anonymized credit card transaction data, including both legitimate and fraudulent transactions. The objective is to train a model capable of identifying potentially fraudulent transactions.
 
-信用卡欺诈检测数据集包含匿名化的信用卡交易数据，其中包含正常交易和欺诈交易。目标是训练一个模型来识别潜在的欺诈交易。
-
-- 特征：V1-V28（匿名化特征）、Time（交易时间）、Amount（交易金额）
-- 标签：Class（0表示正常，1表示欺诈）
+- Features: V1–V28 (anonymized features), Time (transaction time), Amount (transaction amount)
+- Label: Class (0 = legitimate transaction, 1 = fraudulent transaction)
