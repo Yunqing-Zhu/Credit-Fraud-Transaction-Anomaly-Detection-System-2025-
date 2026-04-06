@@ -58,33 +58,48 @@ def optimize_hyperparameters(X_train, y_train):
     Optimize hyperparameters using grid search
     """
     print("Optimizing hyperparameters...")
+    print(f"Training data shape: {X_train.shape}")
     
-    # Define parameter grid
+    # 简化版参数网格 - 大幅缩短搜索时间
     param_grid = {
-        'n_estimators': [100, 200],
-        'max_depth': [10, 20, None],
-        'min_samples_split': [2, 5],
-        'min_samples_leaf': [1, 2],
-        'class_weight': ['balanced', 'balanced_subsample'],
-        'max_features': ['sqrt', 'log2', None]
+        'n_estimators': [100],
+        'max_depth': [10, 20],
+        'min_samples_split': [2],
+        'min_samples_leaf': [1],
+        'class_weight': ['balanced'],
+        'max_features': ['sqrt']
     }
+    
+    # 计算总训练次数
+    import itertools
+    total_combinations = 1
+    for values in param_grid.values():
+        total_combinations *= len(values)
+    total_fits = total_combinations * 2  # cv=2
+    print(f"Total parameter combinations: {total_combinations}")
+    print(f"Total fits (with 2-fold CV): {total_fits}")
+    print("Starting grid search...\n")
     
     # Create random forest classifier
     rf = RandomForestClassifier(random_state=42)
     
-    # Grid search
+    # Grid search - n_jobs=1 避免Windows多进程问题
     grid_search = GridSearchCV(
         estimator=rf,
         param_grid=param_grid,
-        cv=3,  # Use 3-fold cross-validation to save time
+        cv=2,  # 改为2折，减少训练次数
         scoring='roc_auc',
-        n_jobs=-1,
-        verbose=1
+        n_jobs=1,  # 改为单线程，避免Windows死锁
+        verbose=2  # 显示每折的进度
     )
     
-    # Fit grid search
+    # Fit grid search with timing
+    import time
+    start_time = time.time()
     grid_search.fit(X_train, y_train)
+    elapsed = time.time() - start_time
     
+    print(f"\nGrid search completed in {elapsed:.1f} seconds ({elapsed/60:.1f} minutes)")
     print(f"Best parameters: {grid_search.best_params_}")
     print(f"Best cross-validation score: {grid_search.best_score_:.4f}")
     
@@ -191,13 +206,14 @@ def feature_importance_analysis(model, feature_names):
 def main():
     # Load data (Note: Please replace the path with your dataset path)
     # Usually the credit card fraud dataset has a file named creditcard.csv after download
-    data_path = "..\\creditcard.csv"  # Please modify according to your actual dataset path
+    data_path = "./creditcard.csv"  # Please modify according to your actual dataset path
     
     try:
         df = load_data(data_path)
         X_train, X_test, y_train, y_test, scaler = preprocess_data(df)
         
         # Train model
+        # use_optimization=False 跳过超参数搜索，直接用默认参数，1分钟内完成
         model = train_model(X_train, y_train, use_optimization=True)
         
         # Evaluate model
